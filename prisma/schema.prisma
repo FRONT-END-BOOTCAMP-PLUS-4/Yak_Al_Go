@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  username     String       @unique
+  phone        String?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  deletedAt    DateTime?    @map("deleted_at")
+  password     String
+  profileImage String?      @map("profile_image")
+
+  // Relations
+ 
+  
+  // rcmd_menus   rcmd_menus[]
+
+  @@map("members")
+}
