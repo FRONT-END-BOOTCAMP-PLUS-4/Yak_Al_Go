@@ -1,114 +1,48 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
-@import 'tailwindcss';
 
 // Noto Sans 폰트 import
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-@import 'tailwindcss';
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@use 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   --background: #ffffff;
   --foreground: #1a1a1a;
+  --container-width: 1200px;
+  --container-padding: 2rem;
 }
 
 html {
-  font-size: 62.5%; // 1rem = 10px
   max-width: 100vw;
   overflow-x: hidden;
 }
 
 body {
   margin: unset;
-  font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+  font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
   font-size: 1.6rem; // 기본 폰트 크기 = 16px
   color: var(--foreground);
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  > .main-container {
-    max-width: 1200px;
-    margin: 64px auto;
-    min-height: calc(100vh - 84px);
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-// CSS Resets
-h1,
-h2,
-h3 {
-  margin: unset;
-  font-size: unset;
-  font-weight: unset;
-}
-
-ul {
-  margin: unset;
-  font-size: unset;
-  list-style: none;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-img {
-  max-width: 100%;
-  vertical-align: top;
-}
-
-fieldset,
-legend {
-  all: unset;
-  display: block;
-}
-
-button {
-  all: unset;
-  display: block;
-}
-
-input,
-select,
-textarea {
-  all: unset;
-}
-
-select,
-input[type="text"],
-input[type="password"],
-input[type="email"] {
-  display: block;
+.container {
   width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
   box-sizing: border-box;
 }
 
-input[type="file"] {
-  position: absolute;
-  width: 0;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-}
-
-label {
-  display: block;
-}
-
-textarea {
-  display: block;
-  width: 100%;
-  padding: var(--input-padding);
+.main-container {
+  max-width: var(--container-width);
+  margin: 64px auto;
+  min-height: calc(100vh - 84px);
+  padding: 0 var(--container-padding);
   box-sizing: border-box;
 }
