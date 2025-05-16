@@ -1,13 +1,5 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
-    "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-=======
     "baseUrl": ".",
     "paths": {
       "@prisma/generated": ["./prisma/generated"],
@@ -16,7 +8,6 @@
     "target": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["dom", "dom.iterable", "esnext"],
->>>>>>> 801303d ([refactor/#17] chakraui, emotion 등 제거)
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -24,7 +15,6 @@
     "incremental": true,
     "module": "esnext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
