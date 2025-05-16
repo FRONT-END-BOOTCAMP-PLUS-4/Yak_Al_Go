@@ -17,14 +17,14 @@ interface CommentCardProps {
 export function CommentCard({ comment }: CommentCardProps) {
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="p-4 py-0">
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-medium">{comment.author}</span>
+                <span className="text-lg font-medium">{comment.author}</span>
               </div>
-              <div className="text-sm text-muted-foreground">{comment.date}</div>
+              <div className="text-xs text-muted-foreground">{comment.date}</div>
             </div>
             <p className="whitespace-pre-line text-lg">{comment.content}</p>
             <div className="flex items-center gap-2 mt-4">

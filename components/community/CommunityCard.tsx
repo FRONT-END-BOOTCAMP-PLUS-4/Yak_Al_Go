@@ -39,7 +39,7 @@ export function CommunityCard({ post, isQna }: PostCardProps) {
               </div>
               <h3 className="font-bold text-lg">{post.title}</h3>
               <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
-              <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <User className="h-3 w-3" />
                   {post.author}

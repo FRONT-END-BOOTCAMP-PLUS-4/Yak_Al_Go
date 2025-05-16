@@ -17,7 +17,7 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <Card className="w-full">
+    <Card className="py-0 w-full">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
@@ -35,7 +35,7 @@ export function PostCard({ post }: PostCardProps) {
 
           <div>
             <h1 className="text-2xl font-bold">{post.title}</h1>
-            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
                 {post.author}
@@ -43,10 +43,6 @@ export function PostCard({ post }: PostCardProps) {
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
                 {post.date}
-              </div>
-              <div className="flex items-center gap-1">
-                <Eye className="h-4 w-4" />
-                조회 {post.views}
               </div>
               <div className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4" />

@@ -18,7 +18,7 @@ interface QnaCardProps {
 
 export function QnaCard({ qna }: QnaCardProps) {
   return (
-    <Card className="w-full">
+    <Card className="py-0 w-full">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export function QnaCard({ qna }: QnaCardProps) {
 
           <div>
             <h1 className="text-2xl font-bold">{qna.title}</h1>
-            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
                 {qna.author}

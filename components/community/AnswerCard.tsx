@@ -20,7 +20,7 @@ interface AnswerCardProps {
 export function AnswerCard({ answer }: AnswerCardProps) {
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="p-4 py-0">
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <div className="flex items-center justify-between mb-4">
