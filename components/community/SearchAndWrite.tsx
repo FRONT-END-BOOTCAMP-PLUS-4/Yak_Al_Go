@@ -1,9 +1,10 @@
+('');
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 
-export function SearchAndWrite() {
+export function SearchAndWrite({ isQna }: { isQna: boolean }) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row">
       <div className="flex w-full items-center space-x-2">
@@ -14,7 +15,7 @@ export function SearchAndWrite() {
         </Button>
       </div>
       <Button asChild>
-        <Link href="/community/write">글쓰기</Link>
+        {isQna ? <Link href="/member-user/qnas/new">질문하기</Link> : <Link href="/member-user/posts/new">글쓰기</Link>}
       </Button>
     </div>
   );

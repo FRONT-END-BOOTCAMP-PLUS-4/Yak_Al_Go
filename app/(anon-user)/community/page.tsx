@@ -1,7 +1,9 @@
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CommunityCard } from '@/components/community/CommunityCard';
 import { SearchAndWrite } from '@/components/community/SearchAndWrite';
-
+import { useState } from 'react';
 type Post = {
   id: number;
   title: string;
@@ -76,6 +78,8 @@ const qnas: Post[] = [
 ];
 
 export default function CommunityPage() {
+  const [currentTab, setCurrentTab] = useState('qnas');
+
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-6">
@@ -84,21 +88,21 @@ export default function CommunityPage() {
           <p className="text-muted-foreground">약에 관한 정보를 공유하고 소통하는 공간입니다.</p>
         </div>
 
-        <SearchAndWrite />
+        <SearchAndWrite isQna={currentTab === 'qnas'} />
 
-        <Tabs defaultValue="expert" className="w-full">
+        <Tabs defaultValue="qnas" className="w-full" onValueChange={setCurrentTab}>
           <TabsList>
-            <TabsTrigger value="expert">전문가 Q&A</TabsTrigger>
-            <TabsTrigger value="community">자유게시판</TabsTrigger>
+            <TabsTrigger value="qnas">전문가 Q&A</TabsTrigger>
+            <TabsTrigger value="posts">자유게시판</TabsTrigger>
           </TabsList>
-          <TabsContent value="expert" className="mt-4">
+          <TabsContent value="qnas" className="mt-4">
             <div className="grid gap-4">
               {qnas.map((qna) => (
                 <CommunityCard key={qna.id} post={qna} isQna={true} />
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="community" className="mt-4">
+          <TabsContent value="posts" className="mt-4">
             <div className="grid gap-4">
               {posts.map((post) => (
                 <CommunityCard key={post.id} post={post} isQna={false} />
