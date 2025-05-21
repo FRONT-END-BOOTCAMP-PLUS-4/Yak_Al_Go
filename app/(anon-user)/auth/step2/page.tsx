@@ -136,11 +136,7 @@ export default function SignupStep2Page() {
             <CardTitle className="text-2xl font-bold">회원가입 (2/2)</CardTitle>
           </div>
 
-          <CardDescription>
-            {sessionStorage.getItem("signupData")
-              ? "복용 중인 약과 복용 시간을 입력해주세요"
-              : "1단계를 건너뛰고 직접 접근하셨습니다. 복용 중인 약과 복용 시간을 입력해주세요."}
-          </CardDescription>
+          
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 복용 중인 약 */}

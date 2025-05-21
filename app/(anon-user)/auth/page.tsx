@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import KakaoScript from "@/components/kakao-script"
 
 export default function AuthPage() {
-  const router = useRouter()
+
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -35,7 +35,7 @@ export default function AuthPage() {
           <CardContent className="space-y-4">
             {/* 카카오 로그인 버튼 */}
             <Button
-              onClick={() => signIn("kakao", { redirect: true, callbackUrl: "/auth/step1" })}
+              onClick={() => signIn("kakao", { redirect: true, callbackUrl: "/auth/checkActive" })}
               className="w-full bg-[#FEE500] hover:bg-[#FDD835] text-black font-medium"
               disabled={isLoading}
             >
