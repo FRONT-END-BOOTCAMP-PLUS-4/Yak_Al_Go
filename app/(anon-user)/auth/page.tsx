@@ -2,9 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { getProviders, signIn } from "next-auth/react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { loginWithKakao } from "@/lib/kakao-auth"
 import KakaoScript from "@/components/kakao-script"
 
 export default function AuthPage() {
@@ -18,40 +18,12 @@ export default function AuthPage() {
     const code = searchParams.get("code")
     if (code) {
       // 카카오 인증 코드가 있는 경우 처리
-      handleKakaoCallback(code)
+      
     }
   }, [searchParams])
 
-  // 카카오 인증 코드 처리 함수
-  const handleKakaoCallback = async (code: string) => {
-    setIsLoading(true)
-    try {
-      // 실제 구현 시에는 서버 API를 호출하여 토큰 교환 및 사용자 정보 조회
-      console.log("Kakao auth code:", code)
-      // 예시: 서버에 코드 전송 및 사용자 정보 조회
-      // const response = await fetch('/api/auth/kakao', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ code })
-      // });
-      // const data = await response.json();
 
-      // 임시 처리: 리다이렉트
-      router.push("/")
-    } catch (error) {
-      console.error("Failed to process Kakao callback", error)
-      setError("카카오 로그인 처리 중 오류가 발생했습니다.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // 카카오 로그인 버튼 클릭 핸들러
-  const handleKakaoLogin = () => {
-    loginWithKakao()
-  }
-
-  return (
+  return ( 
     <>
       <KakaoScript />
       <div className="container flex h-screen items-center justify-center">
@@ -63,7 +35,7 @@ export default function AuthPage() {
           <CardContent className="space-y-4">
             {/* 카카오 로그인 버튼 */}
             <Button
-              onClick={handleKakaoLogin}
+              onClick={() => signIn("kakao", { redirect: true, callbackUrl: "/auth/step1" })}
               className="w-full bg-[#FEE500] hover:bg-[#FDD835] text-black font-medium"
               disabled={isLoading}
             >
@@ -74,6 +46,8 @@ export default function AuthPage() {
                   viewBox="0 0 18 18"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  role = "img"
+                  aria-label="Kakao"
                   className="mr-2"
                 >
                   <path

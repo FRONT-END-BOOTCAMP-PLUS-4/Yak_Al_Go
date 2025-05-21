@@ -14,12 +14,17 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft } from "lucide-react"
 
+import { useSession } from "next-auth/react"
+
 export default function SignupStep1Page() {
   const router = useRouter()
   const [userType, setUserType] = useState<"general" | "pharmacist">("general")
-  const [kakaoUserInfo, setKakaoUserInfo] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const { data: session, status } = useSession()
+  
+
+  console.log("Session data:", session)
 
   // 폼 상태 관리
   const [formData, setFormData] = useState({
@@ -34,20 +39,7 @@ export default function SignupStep1Page() {
     pharmacyAddress: "",
   })
 
-  // 세션 스토리지에서 카카오 사용자 정보 가져오기
-  useEffect(() => {
-    const userInfoStr = sessionStorage.getItem("kakaoUserInfo")
-    if (userInfoStr) {
-      const userInfo = JSON.parse(userInfoStr)
-      setKakaoUserInfo(userInfo)
-      setFormData((prev) => ({
-        ...prev,
-        email: userInfo.email || prev.email,
-        name: userInfo.name || prev.name,
-      }))
-    }
-    // 리다이렉트 로직 제거
-  }, [])
+
 
   // 폼 입력 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +101,9 @@ export default function SignupStep1Page() {
       router.push("/auth/complete")
     }
   }
-
+if (status === "loading") {
+    return <div>Loading...</div>  
+  }
   return (
     <div className="container flex h-screen items-center justify-center">
       <Card className="w-full max-w-md">
@@ -140,11 +134,6 @@ export default function SignupStep1Page() {
             </CardTitle>
           </div>
 
-          <CardDescription>
-            {kakaoUserInfo
-              ? "기본 정보를 입력해주세요"
-              : "카카오 로그인 없이 직접 접근하셨습니다. 정보를 입력해주세요."}
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue={userType} onValueChange={(value) => setUserType(value as "general" | "pharmacist")}>
