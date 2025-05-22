@@ -10,7 +10,7 @@ datasource db {
 
 model answers {
   id          Int       @id @default(autoincrement())
-  content     String
+  content     Json
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now())
   deleted_at  DateTime?
@@ -65,24 +65,24 @@ model medicines {
   chart            String?
   bar_code         String?       @db.VarChar(50)
   material_name    String?
+  ee_doc_id        String?       @db.VarChar(255)
+  bizrno           String?       @db.VarChar(20)
+  cancel_date      DateTime?
+  cancel_name      String?       @db.VarChar(100)
+  change_date      DateTime?
+  created_at       DateTime      @default(now())
+  edi_code         String?       @db.VarChar(50)
+  insert_file      String?       @db.VarChar(255)
+  nb_doc_id        String?       @db.VarChar(255)
+  pack_unit        String?       @db.VarChar(255)
+  reexam_date      DateTime?
+  reexam_target    String?       @db.VarChar(255)
   storage_method   String?       @db.VarChar(255)
-  valid_term       String?       @db.VarChar(100)
   type_code        String?       @db.VarChar(10)
   type_name        String?       @db.VarChar(100)
-  ee_doc_id        String?       @db.VarChar(255)
   ud_doc_id        String?       @db.VarChar(255)
-  nb_doc_id        String?       @db.VarChar(255)
-  insert_file      String?       @db.VarChar(255)
-  cancel_name      String?       @db.VarChar(100)
-  reexam_target    String?       @db.VarChar(255)
-  reexam_date      DateTime?
-  pack_unit        String?       @db.VarChar(255)
-  edi_code         String?       @db.VarChar(50)
-  cancel_date      DateTime?
-  change_date      DateTime?
-  bizrno           String?       @db.VarChar(20)
-  created_at       DateTime      @default(now())
   updated_at       DateTime      @updatedAt
+  valid_term       String?       @db.VarChar(100)
   inventories      inventories[]
   user_medis       user_medis[]
 
@@ -129,7 +129,7 @@ model post_tags {
 model posts {
   id         Int         @id @default(autoincrement())
   title      String      @db.VarChar(255)
-  content    String
+  content    Json
   created_at DateTime    @default(now())
   updated_at DateTime    @default(now())
   deleted_at DateTime?
@@ -150,7 +150,7 @@ model qna_tags {
 model qnas {
   id         Int        @id @default(autoincrement())
   title      String     @db.VarChar(255)
-  content    String
+  content    Json
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now())
   deleted_at DateTime?

@@ -1,0 +1,9 @@
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "spinachswdb", schema "public" at "new-cafe.com:5433"
+
+- Introspecting based on datasource defined in prisma/schema.prisma
+✔ Introspected 15 models and wrote them into prisma/schema.prisma in 396ms
+      
+Run prisma generate to generate Prisma Client.
+
