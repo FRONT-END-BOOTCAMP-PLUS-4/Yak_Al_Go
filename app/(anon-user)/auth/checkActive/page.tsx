@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from "lucide-react";
 
-export default function AuthCheckPage() {
+export default function                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        AuthCheckPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -24,9 +24,9 @@ export default function AuthCheckPage() {
         const response = await fetch('/api/user/check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            providerId: session.userId,
-            provider: session.provider 
+          body: JSON.stringify({   
+            providerId: session.user.Id,
+            provider: session.provider
           })
         });
 
@@ -68,3 +68,5 @@ export default function AuthCheckPage() {
   }
 
   return null;
+}
+
