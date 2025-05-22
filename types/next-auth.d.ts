@@ -1,8 +1,18 @@
 import type { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
+  interface Profile {
+    kakao_account?: {
+      email?: string;
+      profile?: {
+        nickname?: string;
+        thumbnail_image_url?: string;
+      };
+    };
+  }
   interface User {
     id: string;
+    email?: string;
     name?: string;
     role?: number;
     hpid?: string;
@@ -14,6 +24,7 @@ declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
+      email?: string;
       name?: string;
       role?: number;
       hpid?: string;
@@ -24,6 +35,7 @@ declare module 'next-auth' {
   }
   interface JWT {
     id?: string;
+    email?: string;
     name?: string;
     role?: number;
     hpid?: string;
