@@ -187,7 +187,7 @@ model user_medis {
 }
 
 model users {
-  id           String         @id
+  id           String         @id @default(uuid()) 
   email        String?        @db.VarChar(255)
   photo        String?        @db.VarChar(255)
   name         String?        @db.VarChar(100)

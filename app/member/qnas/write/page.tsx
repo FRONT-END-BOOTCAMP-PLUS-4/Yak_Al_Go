@@ -40,9 +40,29 @@ export default function WritePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission
-    console.log({ title, tags, editorState: editorState.current });
-    router.push('/community');
+    try {
+      const response = await fetch('/api/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content: editorState.current,
+          userId: '20250522',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create question');
+      }
+
+      const result = await response.json();
+      console.log('Question created:', result);
+      router.push('/community'); // 나중에 질문 상세페이지로 이동 하도록 해야한다.
+    } catch (error) {
+      console.error('Error submitting question:', error);
+    }
   };
 
   return (
