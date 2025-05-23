@@ -51,16 +51,11 @@ export default function SignupStep1Page() {
   const handleCheckboxChange = (value: string, field: string) => {
     setFormData((prev) => {
       const currentValues = prev[field as keyof typeof prev] as string[]
-      if (currentValues.includes(value)) {
-        return {
-          ...prev,
-          [field]: currentValues.filter((item) => item !== value),
-        }
-      } else {
-        return {
-          ...prev,
-          [field]: [...currentValues, value],
-        }
+      return {
+        ...prev,
+        [field]: currentValues.includes(value)
+          ? currentValues.filter((item) => item !== value)
+          : [...currentValues, value]
       }
     })
   }
@@ -112,13 +107,13 @@ if (status === "loading") {
             {userType === "general" ? (
               // General user has 2 steps
               <div className="flex items-center space-x-2">
-                <div className="h-2 w-8 rounded-full bg-primary"></div>
-                <div className="h-2 w-8 rounded-full bg-gray-300"></div>
+                <div className="h-2 w-8 rounded-full bg-primary"/>
+                <div className="h-2 w-8 rounded-full bg-gray-300" />
               </div>
             ) : (
               // Pharmacist has only 1 step
               <div className="flex items-center space-x-2">
-                <div className="h-2 w-8 rounded-full bg-primary"></div>
+                <div className="h-2 w-8 rounded-full bg-primary"/>
               </div>
             )}
           </div>
@@ -129,7 +124,8 @@ if (status === "loading") {
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <CardTitle className="text-2xl font-bold">
+            <CardTitle className="text-2xl font-bold"> 
+              {/* userType정의의 */}
               {userType === "general" ? "회원가입 (1/2)" : "회원가입 (1/1)"}
             </CardTitle>
           </div>
@@ -144,42 +140,6 @@ if (status === "loading") {
 
             <TabsContent value="general" className="space-y-4 mt-4">
               {/* 일반 회원 폼 */}
-              {/* <div className="space-y-2">
-                <Label htmlFor="email">이메일</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="이메일을 입력하세요"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={!!kakaoUserInfo?.email}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name">이름</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="이름을 입력하세요"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  disabled={!!kakaoUserInfo?.name}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="nickname">닉네임</Label>
-                <Input
-                  id="nickname"
-                  name="nickname"
-                  placeholder="닉네임을 입력하세요"
-                  value={formData.nickname}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="age">나이</Label>
                 <Input
@@ -187,9 +147,9 @@ if (status === "loading") {
                   name="age"
                   type="number"
                   placeholder="나이를 입력하세요"
-                  value={formData.age}
+                  value={formData.age} // 값 초기화화
                   onChange={handleInputChange}
-                  required
+                  required // 필수 입력
                 />
               </div>
               <div className="space-y-2">
@@ -211,31 +171,17 @@ if (status === "loading") {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                      id="elderly"
-                      checked={formData.healthConditions.includes("elderly")}
+                      id="allergy"
+                      checked={formData.healthConditions.includes("allergy")}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          handleCheckboxChange("elderly", "healthConditions")
+                          handleCheckboxChange("allergy", "healthConditions")
                         } else {
-                          handleCheckboxChange("elderly", "healthConditions")
+                          handleCheckboxChange("allergy", "healthConditions")
                         }
                       }}
                     />
-                    <Label htmlFor="elderly">노약자</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="child"
-                      checked={formData.healthConditions.includes("child")}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          handleCheckboxChange("child", "healthConditions")
-                        } else {
-                          handleCheckboxChange("child", "healthConditions")
-                        }
-                      }}
-                    />
-                    <Label htmlFor="child">소아</Label>
+                    <Label htmlFor="allergy">알레르기</Label>
                   </div>
                 </div>
               </div>
@@ -258,31 +204,6 @@ if (status === "loading") {
 
             <TabsContent value="pharmacist" className="space-y-4 mt-4">
               {/* 약사 회원 폼 */}
-              {/* <div className="space-y-2">
-                <Label htmlFor="email-pharmacist">이메일</Label>
-                <Input
-                  id="email-pharmacist"
-                  name="email"
-                  type="email"
-                  placeholder="이메일을 입력하세요"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={!!kakaoUserInfo?.email}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name-pharmacist">이름</Label>
-                <Input
-                  id="name-pharmacist"
-                  name="name"
-                  placeholder="이름을 입력하세요"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  disabled={!!kakaoUserInfo?.name}
-                  required
-                />
-              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="licenseNumber">약사 면허 번호</Label>
                 <Input
