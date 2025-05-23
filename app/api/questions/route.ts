@@ -3,8 +3,9 @@ import { PrismaQuestionRepository } from '@/backend/infra/repositories/prisma/qu
 import { CreateQuestionDto } from '@/backend/dto/questionDto';
 import { CreateQuestionUseCase } from '@/backend/application/usecases/question/createQuestionUseCase';
 import { FindAllQuestionsUseCase } from '@/backend/application/usecases/question/findAllQuestionsUseCase';
+import prisma from '@/lib/prisma';
 
-const questionRepository = new PrismaQuestionRepository();
+const questionRepository = new PrismaQuestionRepository(prisma);
 const createQuestionUseCase = new CreateQuestionUseCase(questionRepository);
 const findAllQuestionsUseCase = new FindAllQuestionsUseCase(questionRepository);
 

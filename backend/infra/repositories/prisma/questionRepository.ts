@@ -5,8 +5,7 @@ import {
   PaginatedQuestions,
   QuestionRepository,
 } from '@/backend/domain/repositories/questionRepository';
-
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
 type PrismaQuestion = {
   id: number;
@@ -35,8 +34,10 @@ type PrismaQnATag = {
 };
 
 export class PrismaQuestionRepository implements QuestionRepository {
+  constructor(private prisma: PrismaClient) {}
+
   async create(question: Question): Promise<Question> {
-    const created = await prisma.qnas.create({
+    const created = await this.prisma.qnas.create({
       data: {
         title: question.title,
         content: question.content,
@@ -48,7 +49,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async findById(id: number): Promise<Question | null> {
-    const question = await prisma.qnas.findUnique({
+    const question = await this.prisma.qnas.findUnique({
       where: { id },
       include: {
         qna_tags: {
@@ -74,7 +75,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
     const skip = (page - 1) * limit;
 
     const [questions, total] = await Promise.all([
-      prisma.qnas.findMany({
+      this.prisma.qnas.findMany({
         where: { deleted_at: null },
         orderBy: { created_at: 'desc' },
         take: limit + 1, // fetch one extra to determine if there are more items
@@ -92,7 +93,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
           },
         },
       }),
-      prisma.qnas.count({
+      this.prisma.qnas.count({
         where: { deleted_at: null },
       }),
     ]);
@@ -108,7 +109,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async update(id: number, question: Partial<Question>): Promise<Question> {
-    const updated = await prisma.qnas.update({
+    const updated = await this.prisma.qnas.update({
       where: { id },
       data: {
         title: question.title,
@@ -121,14 +122,14 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await prisma.qnas.update({
+    await this.prisma.qnas.update({
       where: { id },
       data: { deleted_at: new Date() },
     });
   }
 
   async addTag(questionId: number, tag: Tag): Promise<void> {
-    await prisma.qna_tags.create({
+    await this.prisma.qna_tags.create({
       data: {
         qnaId: questionId,
         tagId: tag.id!,
@@ -137,7 +138,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async removeTag(questionId: number, tagId: number): Promise<void> {
-    await prisma.qna_tags.deleteMany({
+    await this.prisma.qna_tags.deleteMany({
       where: {
         qnaId: questionId,
         tagId,
@@ -146,7 +147,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async getTags(questionId: number): Promise<Tag[]> {
-    const question = await prisma.qnas.findUnique({
+    const question = await this.prisma.qnas.findUnique({
       where: { id: questionId },
       include: {
         qna_tags: {
@@ -159,17 +160,11 @@ export class PrismaQuestionRepository implements QuestionRepository {
 
     if (!question) return [];
 
-    return question.qna_tags.map(
-      (qt: PrismaQnATag) =>
-        new Tag({
-          id: qt.tags.id,
-          tagName: qt.tags.tag_name,
-        })
-    );
+    return question.qna_tags.map((qt: PrismaQnATag) => new Tag({ id: qt.tags.id, tagName: qt.tags.tag_name }));
   }
 
   async getAnswerCount(questionId: number): Promise<number> {
-    const count = await prisma.answers.count({
+    const count = await this.prisma.answers.count({
       where: {
         qnaId: questionId,
       },

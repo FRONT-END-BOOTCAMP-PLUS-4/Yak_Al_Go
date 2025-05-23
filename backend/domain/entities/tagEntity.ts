@@ -1,9 +1,9 @@
 export class Tag {
   id?: number;
-  tagName: string;
+  name: string;
 
-  constructor(props: { id?: number; tagName: string }) {
+  constructor(props: { id?: number; name: string }) {
     this.id = props.id;
-    this.tagName = props.tagName;
+    this.name = props.name;
   }
 }

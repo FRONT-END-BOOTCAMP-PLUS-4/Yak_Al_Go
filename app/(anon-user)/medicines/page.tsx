@@ -1,95 +1,95 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Search, Filter, ArrowUpDown } from "lucide-react"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Search, Filter, ArrowUpDown } from 'lucide-react';
 
 // Mock data for medicines
 const medicinesData = [
   {
     id: 1,
-    name: "타이레놀",
-    company: "한국얀센",
-    type: "진통제",
-    description: "해열, 진통, 소염 작용",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '타이레놀',
+    company: '한국얀센',
+    type: '진통제',
+    description: '해열, 진통, 소염 작용',
+    image: '/placeholder.svg?height=80&width=80',
   },
   {
     id: 2,
-    name: "판콜에이",
-    company: "동아제약",
-    type: "감기약",
-    description: "감기 증상 완화",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '판콜에이',
+    company: '동아제약',
+    type: '감기약',
+    description: '감기 증상 완화',
+    image: '/placeholder.svg?height=80&width=80',
   },
   {
     id: 3,
-    name: "게보린",
-    company: "삼진제약",
-    type: "진통제",
-    description: "두통, 치통, 생리통 완화",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '게보린',
+    company: '삼진제약',
+    type: '진통제',
+    description: '두통, 치통, 생리통 완화',
+    image: '/placeholder.svg?height=80&width=80',
   },
   {
     id: 4,
-    name: "베아제",
-    company: "대웅제약",
-    type: "소화제",
-    description: "소화불량, 체함, 위부팽만감",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '베아제',
+    company: '대웅제약',
+    type: '소화제',
+    description: '소화불량, 체함, 위부팽만감',
+    image: '/placeholder.svg?height=80&width=80',
   },
   {
     id: 5,
-    name: "훼스탈골드",
-    company: "한독",
-    type: "소화제",
-    description: "소화불량, 식체, 위부팽만감",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '훼스탈골드',
+    company: '한독',
+    type: '소화제',
+    description: '소화불량, 식체, 위부팽만감',
+    image: '/placeholder.svg?height=80&width=80',
   },
   {
     id: 6,
-    name: "판피린",
-    company: "동아제약",
-    type: "진통제",
-    description: "두통, 치통, 근육통 완화",
-    image: "/placeholder.svg?height=80&width=80",
+    name: '판피린',
+    company: '동아제약',
+    type: '진통제',
+    description: '두통, 치통, 근육통 완화',
+    image: '/placeholder.svg?height=80&width=80',
   },
-]
+];
 
 export default function MedicinesPage() {
-  const [medicines, setMedicines] = useState(medicinesData)
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
+  const [medicines, setMedicines] = useState(medicinesData);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
 
   // Handle sorting
   const handleSort = () => {
-    if (sortOrder === null || sortOrder === "desc") {
+    if (sortOrder === null || sortOrder === 'desc') {
       // Sort ascending (가나다순)
-      setMedicines([...medicines].sort((a, b) => a.name.localeCompare(b.name, "ko")))
-      setSortOrder("asc")
+      setMedicines([...medicines].sort((a, b) => a.name.localeCompare(b.name, 'ko')));
+      setSortOrder('asc');
     } else {
       // Sort descending (역가나다순)
-      setMedicines([...medicines].sort((a, b) => b.name.localeCompare(a.name, "ko")))
-      setSortOrder("desc")
+      setMedicines([...medicines].sort((a, b) => b.name.localeCompare(a.name, 'ko')));
+      setSortOrder('desc');
     }
-  }
+  };
 
   // Handle search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }
+    setSearchQuery(e.target.value);
+  };
 
   // Filter medicines based on search query and active tab
   useEffect(() => {
-    let filtered = medicinesData
+    let filtered = medicinesData;
 
     // Apply search filter
     if (searchQuery) {
@@ -97,30 +97,30 @@ export default function MedicinesPage() {
         (medicine) =>
           medicine.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           medicine.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          medicine.description.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+          medicine.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
 
     // Apply tab filter
-    if (activeTab !== "all") {
+    if (activeTab !== 'all') {
       const typeMap: Record<string, string> = {
-        painkillers: "진통제",
-        cold: "감기약",
-        digestive: "소화제",
-        antibiotics: "항생제",
-      }
-      filtered = filtered.filter((medicine) => medicine.type === typeMap[activeTab])
+        painkillers: '진통제',
+        cold: '감기약',
+        digestive: '소화제',
+        antibiotics: '항생제',
+      };
+      filtered = filtered.filter((medicine) => medicine.type === typeMap[activeTab]);
     }
 
     // Apply current sort order if exists
-    if (sortOrder === "asc") {
-      filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name, "ko"))
-    } else if (sortOrder === "desc") {
-      filtered = [...filtered].sort((a, b) => b.name.localeCompare(a.name, "ko"))
+    if (sortOrder === 'asc') {
+      filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    } else if (sortOrder === 'desc') {
+      filtered = [...filtered].sort((a, b) => b.name.localeCompare(a.name, 'ko'));
     }
 
-    setMedicines(filtered)
-  }, [searchQuery, activeTab, sortOrder])
+    setMedicines(filtered);
+  }, [searchQuery, activeTab, sortOrder]);
 
   return (
     <div className="container py-8">
@@ -141,7 +141,7 @@ export default function MedicinesPage() {
           <div className="flex gap-2">
             <Button variant="outline" className="flex gap-2" onClick={handleSort}>
               <ArrowUpDown className="h-4 w-4" />
-              {sortOrder === "asc" ? "가나다순 ↓" : sortOrder === "desc" ? "가나다순 ↑" : "가나다순"}
+              {sortOrder === 'asc' ? '가나다순 ↓' : sortOrder === 'desc' ? '가나다순 ↑' : '가나다순'}
             </Button>
             <Button variant="outline" className="flex gap-2">
               <Filter className="h-4 w-4" />
@@ -168,7 +168,7 @@ export default function MedicinesPage() {
                         <div className="flex gap-4">
                           <div className="flex-shrink-0">
                             <img
-                              src={medicine.image || "/placeholder.svg"}
+                              src={medicine.image || '/placeholder.svg'}
                               alt={medicine.name}
                               width={80}
                               height={80}
@@ -205,7 +205,7 @@ export default function MedicinesPage() {
                         <div className="flex gap-4">
                           <div className="flex-shrink-0">
                             <img
-                              src={medicine.image || "/placeholder.svg"}
+                              src={medicine.image || '/placeholder.svg'}
                               alt={medicine.name}
                               width={80}
                               height={80}
@@ -242,7 +242,7 @@ export default function MedicinesPage() {
                         <div className="flex gap-4">
                           <div className="flex-shrink-0">
                             <img
-                              src={medicine.image || "/placeholder.svg"}
+                              src={medicine.image || '/placeholder.svg'}
                               alt={medicine.name}
                               width={80}
                               height={80}
@@ -279,7 +279,7 @@ export default function MedicinesPage() {
                         <div className="flex gap-4">
                           <div className="flex-shrink-0">
                             <img
-                              src={medicine.image || "/placeholder.svg"}
+                              src={medicine.image || '/placeholder.svg'}
                               alt={medicine.name}
                               width={80}
                               height={80}
@@ -314,5 +314,5 @@ export default function MedicinesPage() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
