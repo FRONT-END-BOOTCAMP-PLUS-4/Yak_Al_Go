@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import { TagSelect } from '@/components/qna/TagSelect';
 import { initialValue } from '@/app/member/qnas/write/editorInitialValue';
 import { SerializedEditorState } from 'lexical';
-import { Tag } from '@/backend/domain/entities/tagEntity';
+import { Tag } from '@/backend/domain/entities/TagEntity';
 // Dynamically import the Editor component with no SSR
 const Editor = dynamic(() => import('@/components/blocks/editor-x/editor').then((mod) => mod.Editor), {
   ssr: false,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaTagRepository } from '@/backend/infra/repositories/prisma/tagRepository';
-import { GetAllTagsUseCase } from '@/backend/application/usecases/tag/getAllTags';
+import { PrismaTagRepository } from '@/backend/infra/repositories/prisma/PrismaTagRepository';
+import { GetAllTagsUseCase } from '@/backend/application/usecases/tag/GetAllTagsUsecase';
 import prisma from '@/lib/prisma';
 
 const tagRepository = new PrismaTagRepository(prisma);

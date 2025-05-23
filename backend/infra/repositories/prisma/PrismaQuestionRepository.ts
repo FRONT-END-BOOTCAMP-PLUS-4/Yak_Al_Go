@@ -1,37 +1,12 @@
-import { Question } from '@/backend/domain/entities/questionEntity';
-import { Tag } from '@/backend/domain/entities/tagEntity';
+import { Question } from '@/backend/domain/entities/QuestionEntity';
+import { Tag } from '@/backend/domain/entities/TagEntity';
 import {
   PaginationParams,
   PaginatedQuestions,
   QuestionRepository,
-} from '@/backend/domain/repositories/questionRepository';
+} from '@/backend/domain/repositories/QuestionRepository';
 import { PrismaClient } from '@prisma/client';
-
-type PrismaQuestion = {
-  id: number;
-  title: string;
-  content: any;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date | null;
-  userId: string;
-  qna_tags?: {
-    tags: {
-      id: number;
-      tag_name: string;
-    };
-  }[];
-  _count?: {
-    answers: number;
-  };
-};
-
-type PrismaQnATag = {
-  tags: {
-    id: number;
-    tag_name: string;
-  };
-};
+import { QuestionResponseDto } from '@/backend/application/usecases/question/dto/QuestionDto';
 
 export class PrismaQuestionRepository implements QuestionRepository {
   constructor(private prisma: PrismaClient) {}
@@ -48,7 +23,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
     return this.mapToEntity(created);
   }
 
-  async findById(id: number): Promise<Question | null> {
+  async findById(id: number): Promise<QuestionResponseDto | null> {
     const question = await this.prisma.qnas.findUnique({
       where: { id },
       include: {
@@ -57,9 +32,19 @@ export class PrismaQuestionRepository implements QuestionRepository {
             tags: true,
           },
         },
-        _count: {
+        answers: {
           select: {
-            answers: true,
+            id: true,
+            content: true,
+            created_at: true,
+            updated_at: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+                member_type: true,
+              },
+            },
           },
         },
       },
@@ -67,7 +52,15 @@ export class PrismaQuestionRepository implements QuestionRepository {
 
     if (!question) return null;
 
-    return this.mapToEntity(question);
+    return {
+      ...this.mapToEntity(question),
+      tags:
+        question.qna_tags?.map((qt: any) => ({
+          id: qt.tags.id,
+          name: qt.tags.tag_name,
+        })) || [],
+      answers: question.answers,
+    };
   }
 
   async findAll(params: PaginationParams): Promise<PaginatedQuestions> {
@@ -102,7 +95,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
     const items = hasMore ? questions.slice(0, -1) : questions;
 
     return {
-      questions: items.map((q: PrismaQuestion) => this.mapToEntity(q)),
+      questions: items.map((q: any) => this.mapToEntity(q)),
       hasMore,
       total,
     };
@@ -160,7 +153,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
 
     if (!question) return [];
 
-    return question.qna_tags.map((qt: PrismaQnATag) => new Tag({ id: qt.tags.id, name: qt.tags.tag_name }));
+    return question.qna_tags.map((qt: any) => new Tag({ id: qt.tags.id, name: qt.tags.tag_name }));
   }
 
   async getAnswerCount(questionId: number): Promise<number> {
@@ -173,7 +166,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
     return count;
   }
 
-  private mapToEntity(prismaQuestion: PrismaQuestion): Question {
+  private mapToEntity(prismaQuestion: any): Question {
     return new Question({
       id: prismaQuestion.id,
       title: prismaQuestion.title,
@@ -183,7 +176,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
       deletedAt: prismaQuestion.deleted_at,
       userId: prismaQuestion.userId,
       tags: prismaQuestion.qna_tags?.map(
-        (qt: PrismaQnATag) =>
+        (qt: any) =>
           new Tag({
             id: qt.tags.id,
             name: qt.tags.tag_name,

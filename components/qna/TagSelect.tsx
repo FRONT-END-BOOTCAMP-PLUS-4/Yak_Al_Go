@@ -9,7 +9,7 @@ import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTags } from '@/lib/queries/useTags';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tag } from '@/backend/domain/entities/tagEntity';
+import { Tag } from '@/backend/domain/entities/TagEntity';
 
 interface TagSelectProps {
   selectedTags: Tag[];

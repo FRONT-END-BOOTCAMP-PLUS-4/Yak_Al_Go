@@ -1,4 +1,4 @@
-import { Tag } from './tagEntity';
+import { Tag } from './TagEntity';
 
 export class Question {
   id?: number;

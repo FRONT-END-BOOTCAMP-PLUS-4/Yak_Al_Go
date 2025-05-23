@@ -1,6 +1,6 @@
-import { Question } from '@/backend/domain/entities/questionEntity';
-import { QuestionRepository } from '@/backend/domain/repositories/questionRepository';
-import { CreateQuestionDto, QuestionResponseDto } from '@/backend/dto/questionDto';
+import { Question } from '@/backend/domain/entities/QuestionEntity';
+import { QuestionRepository } from '@/backend/domain/repositories/QuestionRepository';
+import { CreateQuestionDto, QuestionResponseDto } from '@/backend/application/usecases/question/dto/QuestionDto';
 
 export class CreateQuestionUseCase {
   constructor(private questionRepository: QuestionRepository) {}
@@ -23,6 +23,8 @@ export class CreateQuestionUseCase {
       createdAt: created.createdAt,
       updatedAt: created.updatedAt,
       userId: created.userId,
+      tags: dto.tags,
+      answers: [],
     };
   }
 }

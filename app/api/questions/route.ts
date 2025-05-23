@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaQuestionRepository } from '@/backend/infra/repositories/prisma/questionRepository';
-import { CreateQuestionDto } from '@/backend/dto/questionDto';
-import { CreateQuestionUseCase } from '@/backend/application/usecases/question/createQuestionUseCase';
-import { FindAllQuestionsUseCase } from '@/backend/application/usecases/question/findAllQuestionsUseCase';
+import { PrismaQuestionRepository } from '@/backend/infra/repositories/prisma/PrismaQuestionRepository';
+import { CreateQuestionDto } from '@/backend/dto/QuestionDto';
+import { CreateQuestionUseCase } from '@/backend/application/usecases/question/CreateQuestionUseCase';
+import { GetAllQuestionsUseCase } from '@/backend/application/usecases/question/GetAllQuestionsUseCase';
 import prisma from '@/lib/prisma';
 
 const questionRepository = new PrismaQuestionRepository(prisma);
 const createQuestionUseCase = new CreateQuestionUseCase(questionRepository);
-const findAllQuestionsUseCase = new FindAllQuestionsUseCase(questionRepository);
+const getAllQuestionsUseCase = new GetAllQuestionsUseCase(questionRepository);
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
 
-    const result = await findAllQuestionsUseCase.execute({ page, limit });
+    const result = await getAllQuestionsUseCase.execute({ page, limit });
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching questions:', error);
