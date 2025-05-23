@@ -5,13 +5,14 @@ import { MessageSquare, User, Clock } from 'lucide-react';
 import { formatDate } from '@/lib/community/formatDate';
 import { getContentText } from '@/lib/community/getContentText';
 import { useMemo } from 'react';
+import { Tag } from '@/backend/domain/entities/tagEntity';
 
 interface QuestionCardProps {
   qna: {
     id: string;
     title: string;
     content: any;
-    tags?: string[];
+    tags?: Tag[];
     userId: string;
     createdAt: string;
     answerCount: number;
@@ -33,9 +34,9 @@ export const QuestionCard = ({ qna }: QuestionCardProps) => {
                 </Badge>
                 <div className="flex flex-wrap gap-1">
                   {qna.tags &&
-                    qna.tags.map((tag: string) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
+                    qna.tags.map((tag: Tag) => (
+                      <Badge key={tag.id} variant="outline" className="text-xs">
+                        {tag.name}
                       </Badge>
                     ))}
                 </div>

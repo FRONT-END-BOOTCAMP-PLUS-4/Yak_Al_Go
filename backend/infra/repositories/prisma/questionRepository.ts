@@ -128,12 +128,12 @@ export class PrismaQuestionRepository implements QuestionRepository {
     });
   }
 
-  async addTag(questionId: number, tag: Tag): Promise<void> {
-    await this.prisma.qna_tags.create({
-      data: {
+  async addTags(questionId: number, tags: Tag[]): Promise<void> {
+    await this.prisma.qna_tags.createMany({
+      data: tags.map((tag) => ({
         qnaId: questionId,
-        tagId: tag.id!,
-      },
+        tagId: tag.id,
+      })),
     });
   }
 
@@ -160,7 +160,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
 
     if (!question) return [];
 
-    return question.qna_tags.map((qt: PrismaQnATag) => new Tag({ id: qt.tags.id, tagName: qt.tags.tag_name }));
+    return question.qna_tags.map((qt: PrismaQnATag) => new Tag({ id: qt.tags.id, name: qt.tags.tag_name }));
   }
 
   async getAnswerCount(questionId: number): Promise<number> {
@@ -186,7 +186,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
         (qt: PrismaQnATag) =>
           new Tag({
             id: qt.tags.id,
-            tagName: qt.tags.tag_name,
+            name: qt.tags.tag_name,
           })
       ),
       answerCount: prismaQuestion._count?.answers,
