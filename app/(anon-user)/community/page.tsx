@@ -12,12 +12,12 @@ import { useQuestions } from '@/lib/queries/useQuestions';
 
 import { QuestionCard } from '@/components/community/QuestionCard';
 import { PostCard } from '@/components/community/PostCard';
+import { QnaSkeleton } from '@/components/community/QnaSkeleton';
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState('qnas');
 
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
+  // 전문가 Q&A 데이터 조회
   const {
     data: qnas,
     fetchNextPage: fetchNextQnas,
@@ -25,10 +25,15 @@ export default function CommunityPage() {
     isFetchingNextPage: isFetchingNextQnas,
   } = useQuestions();
 
+  // 전문가 Q&A 데이터 조회 결과 페이지네이션 처리
   const questions = qnas?.pages.flatMap((page: any) => page?.questions || []) || [];
+
+  // 자유게시판 데이터 조회 결과 페이지네이션 처리
   const posts: any[] = [];
   const isLoading = isFetchingNextQnas;
 
+  // 무한 스크롤 로딩 감지하는 ref 설정
+  const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -87,8 +92,10 @@ export default function CommunityPage() {
               {questions.length > 0 ? (
                 questions.map((qna) => <QuestionCard key={qna.id} qna={qna} />)
               ) : (
-                <div className="flex justify-center items-center h-full">
-                  <p className="text-muted-foreground">질문이 없습니다.</p>
+                <div className="flex flex-col gap-4">
+                  <QnaSkeleton />
+                  <QnaSkeleton />
+                  <QnaSkeleton />
                 </div>
               )}
             </div>

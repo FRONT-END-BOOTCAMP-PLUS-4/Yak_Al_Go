@@ -4,13 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useRef, useState } from 'react';
+import { useRef, useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
 import { initialValue } from '@/app/member/qnas/write/editorInitialValue';
 import { SerializedEditorState } from 'lexical';
 
-import { Editor } from '@/components/blocks/editor-x/editor';
+// Dynamically import the Editor component with no SSR
+const Editor = dynamic(() => import('@/components/blocks/editor-x/editor').then((mod) => mod.Editor), {
+  ssr: false,
+  loading: () => <div className="h-72 w-full animate-pulse rounded-lg bg-muted" />,
+});
 
 export default function WritePage() {
   const router = useRouter();
@@ -115,10 +120,12 @@ export default function WritePage() {
 
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium">내용</label>
-                  <Editor
-                    editorSerializedState={editorState.current}
-                    onSerializedChange={(value) => (editorState.current = value)}
-                  />
+                  <Suspense fallback={<div className="h-72 w-full animate-pulse rounded-lg bg-muted" />}>
+                    <Editor
+                      editorSerializedState={editorState.current}
+                      onSerializedChange={(value) => (editorState.current = value)}
+                    />
+                  </Suspense>
                 </div>
               </div>
             </CardContent>
