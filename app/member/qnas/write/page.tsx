@@ -14,10 +14,11 @@ import { Editor } from '@/components/blocks/editor-x/editor';
 
 export default function WritePage() {
   const router = useRouter();
-  const [title, setTitle] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+
+  const title = useRef<HTMLInputElement>(null);
   const editorState = useRef<SerializedEditorState>(initialValue);
 
   const handleAddTag = () => {
@@ -81,13 +82,7 @@ export default function WritePage() {
                   <label htmlFor="title" className="text-sm font-medium">
                     제목
                   </label>
-                  <Input
-                    id="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="제목을 입력하세요"
-                    required
-                  />
+                  <Input id="title" ref={title} placeholder="제목을 입력하세요" required />
                 </div>
 
                 <div className="flex flex-col gap-2">

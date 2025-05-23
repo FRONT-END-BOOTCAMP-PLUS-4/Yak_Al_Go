@@ -10,13 +10,13 @@ datasource db {
 
 model answers {
   id          Int       @id @default(autoincrement())
-  content     Json
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now())
   deleted_at  DateTime?
   is_accepted Boolean   @default(false)
   userId      String
   qnaId       Int
+  content     Json
   qnas        qnas      @relation(fields: [qnaId], references: [id])
   users       users     @relation(fields: [userId], references: [id])
 }
@@ -129,11 +129,11 @@ model post_tags {
 model posts {
   id         Int         @id @default(autoincrement())
   title      String      @db.VarChar(255)
-  content    Json
   created_at DateTime    @default(now())
   updated_at DateTime    @default(now())
   deleted_at DateTime?
   userId     String
+  content    Json
   comments   comments[]
   post_tags  post_tags[]
   users      users       @relation(fields: [userId], references: [id])
@@ -150,11 +150,11 @@ model qna_tags {
 model qnas {
   id         Int        @id @default(autoincrement())
   title      String     @db.VarChar(255)
-  content    Json
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now())
   deleted_at DateTime?
   userId     String
+  content    Json
   answers    answers[]
   qna_tags   qna_tags[]
   users      users      @relation(fields: [userId], references: [id])
@@ -187,7 +187,7 @@ model user_medis {
 }
 
 model users {
-  id           String         @id @default(uuid()) 
+  id           String         @id @default(uuid())
   email        String?        @db.VarChar(255)
   photo        String?        @db.VarChar(255)
   name         String?        @db.VarChar(100)

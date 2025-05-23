@@ -1,10 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import { Question } from '../../../domain/entities/questionEntity';
+import { Question } from '@/backend/domain/entities/questionEntity';
+import { Tag } from '@/backend/domain/entities/tagEntity';
 import {
   PaginationParams,
   PaginatedQuestions,
   QuestionRepository,
-} from '../../../domain/repositories/questionRepository';
+} from '@/backend/domain/repositories/questionRepository';
+
+import prisma from '@/lib/prisma';
 
 type PrismaQuestion = {
   id: number;
@@ -14,13 +16,27 @@ type PrismaQuestion = {
   updated_at: Date;
   deleted_at: Date | null;
   userId: string;
+  qna_tags?: {
+    tags: {
+      id: number;
+      tag_name: string;
+    };
+  }[];
+  _count?: {
+    answers: number;
+  };
+};
+
+type PrismaQnATag = {
+  tags: {
+    id: number;
+    tag_name: string;
+  };
 };
 
 export class PrismaQuestionRepository implements QuestionRepository {
-  constructor(private prisma: PrismaClient) {}
-
   async create(question: Question): Promise<Question> {
-    const created = await this.prisma.qnas.create({
+    const created = await prisma.qnas.create({
       data: {
         title: question.title,
         content: question.content,
@@ -32,8 +48,20 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async findById(id: number): Promise<Question | null> {
-    const question = await this.prisma.qnas.findUnique({
+    const question = await prisma.qnas.findUnique({
       where: { id },
+      include: {
+        qna_tags: {
+          include: {
+            tags: true,
+          },
+        },
+        _count: {
+          select: {
+            answers: true,
+          },
+        },
+      },
     });
 
     if (!question) return null;
@@ -46,13 +74,25 @@ export class PrismaQuestionRepository implements QuestionRepository {
     const skip = (page - 1) * limit;
 
     const [questions, total] = await Promise.all([
-      this.prisma.qnas.findMany({
+      prisma.qnas.findMany({
         where: { deleted_at: null },
         orderBy: { created_at: 'desc' },
         take: limit + 1, // fetch one extra to determine if there are more items
         skip,
+        include: {
+          qna_tags: {
+            include: {
+              tags: true,
+            },
+          },
+          _count: {
+            select: {
+              answers: true,
+            },
+          },
+        },
       }),
-      this.prisma.qnas.count({
+      prisma.qnas.count({
         where: { deleted_at: null },
       }),
     ]);
@@ -68,7 +108,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async update(id: number, question: Partial<Question>): Promise<Question> {
-    const updated = await this.prisma.qnas.update({
+    const updated = await prisma.qnas.update({
       where: { id },
       data: {
         title: question.title,
@@ -81,10 +121,61 @@ export class PrismaQuestionRepository implements QuestionRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.prisma.qnas.update({
+    await prisma.qnas.update({
       where: { id },
       data: { deleted_at: new Date() },
     });
+  }
+
+  async addTag(questionId: number, tag: Tag): Promise<void> {
+    await prisma.qna_tags.create({
+      data: {
+        qnaId: questionId,
+        tagId: tag.id!,
+      },
+    });
+  }
+
+  async removeTag(questionId: number, tagId: number): Promise<void> {
+    await prisma.qna_tags.deleteMany({
+      where: {
+        qnaId: questionId,
+        tagId,
+      },
+    });
+  }
+
+  async getTags(questionId: number): Promise<Tag[]> {
+    const question = await prisma.qnas.findUnique({
+      where: { id: questionId },
+      include: {
+        qna_tags: {
+          include: {
+            tags: true,
+          },
+        },
+      },
+    });
+
+    if (!question) return [];
+
+    return question.qna_tags.map(
+      (qt: PrismaQnATag) =>
+        new Tag({
+          id: qt.tags.id,
+          tagName: qt.tags.tag_name,
+        })
+    );
+  }
+
+  async getAnswerCount(questionId: number): Promise<number> {
+    const count = await prisma.answers.count({
+      where: {
+        qnaId: questionId,
+      },
+    });
+
+    return count;
   }
 
   private mapToEntity(prismaQuestion: PrismaQuestion): Question {
@@ -96,6 +187,14 @@ export class PrismaQuestionRepository implements QuestionRepository {
       updatedAt: prismaQuestion.updated_at,
       deletedAt: prismaQuestion.deleted_at,
       userId: prismaQuestion.userId,
+      tags: prismaQuestion.qna_tags?.map(
+        (qt: PrismaQnATag) =>
+          new Tag({
+            id: qt.tags.id,
+            tagName: qt.tags.tag_name,
+          })
+      ),
+      answerCount: prismaQuestion._count?.answers,
     });
   }
 }

@@ -1,3 +1,5 @@
+import { Tag } from './tagEntity';
+
 export class Question {
   id?: number;
   title: string;
@@ -6,6 +8,8 @@ export class Question {
   updatedAt?: Date;
   deletedAt?: Date | null;
   userId: string;
+  tags?: Tag[];
+  answerCount?: number;
 
   constructor(props: {
     id?: number;
@@ -15,6 +19,8 @@ export class Question {
     updatedAt?: Date;
     deletedAt?: Date | null;
     userId: string;
+    tags?: Tag[];
+    answerCount?: number;
   }) {
     this.id = props.id;
     this.title = props.title;
@@ -23,5 +29,7 @@ export class Question {
     this.updatedAt = props.updatedAt;
     this.deletedAt = props.deletedAt;
     this.userId = props.userId;
+    this.tags = props.tags;
+    this.answerCount = props.answerCount;
   }
 }

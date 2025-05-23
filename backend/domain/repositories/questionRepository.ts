@@ -1,4 +1,5 @@
 import { Question } from '../entities/questionEntity';
+import { Tag } from '../entities/tagEntity';
 
 export interface PaginationParams {
   page: number;
@@ -17,4 +18,8 @@ export interface QuestionRepository {
   findAll(params: PaginationParams): Promise<PaginatedQuestions>;
   update(id: number, question: Partial<Question>): Promise<Question>;
   delete(id: number): Promise<void>;
+  addTag(questionId: number, tag: Tag): Promise<void>;
+  removeTag(questionId: number, tagId: number): Promise<void>;
+  getTags(questionId: number): Promise<Tag[]>;
+  getAnswerCount(questionId: number): Promise<number>;
 }
