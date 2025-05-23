@@ -3,14 +3,15 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Search, MessageSquare, User, Clock, Loader2 } from 'lucide-react';
+
+import { Search, Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useQuestions } from '@/lib/queries/useQuestions';
-import { formatDate } from '@/lib/community/formatDate';
-import { getContentText } from '@/lib/community/getContentText';
+
+import { QuestionCard } from '@/components/community/QuestionCard';
+import { PostCard } from '@/components/community/PostCard';
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState('qnas');
@@ -84,49 +85,7 @@ export default function CommunityPage() {
           <TabsContent value="qnas" className="mt-4">
             <div className="grid gap-4">
               {questions.length > 0 ? (
-                questions.map((qna) => (
-                  <Link href={`community/qnas/${qna.id}`} key={qna.id}>
-                    <Card className="h-full overflow-hidden transition-all hover:shadow-md">
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Badge variant="default" className="bg-primary">
-                                전문가 Q&A
-                              </Badge>
-                              <div className="flex flex-wrap gap-1">
-                                {qna.tags &&
-                                  qna.tags.map((tag: string) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
-                                      {tag}
-                                    </Badge>
-                                  ))}
-                              </div>
-                            </div>
-                            <h3 className="font-bold text-lg">{qna.title}</h3>
-                            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                              {getContentText(qna.content)}
-                            </p>
-                            <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
-                              <div className="flex items-center gap-1">
-                                <User className="h-3 w-3" />
-                                {qna.userId}
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {formatDate(qna.createdAt)}
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <MessageSquare className="h-3 w-3" />
-                                답변 {qna.answerCount}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))
+                questions.map((qna) => <QuestionCard key={qna.id} qna={qna} />)
               ) : (
                 <div className="flex justify-center items-center h-full">
                   <p className="text-muted-foreground">질문이 없습니다.</p>
@@ -136,44 +95,13 @@ export default function CommunityPage() {
           </TabsContent>
           <TabsContent value="posts" className="mt-4">
             <div className="grid gap-4">
-              {posts.map((post, index) => (
-                <Link href={`community/posts/${post.id}`} key={post.id}>
-                  <Card className="h-full overflow-hidden transition-all hover:shadow-md">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline">자유게시판</Badge>
-                            <div className="flex flex-wrap gap-1">
-                              {post.tags.map((tag: string) => (
-                                <Badge key={tag} variant="outline" className="text-xs">
-                                  {tag}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                          <h3 className="font-bold text-lg">{post.title}</h3>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{post.content}</p>
-                          <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <User className="h-3 w-3" />
-                              {post.author}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {post.date}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MessageSquare className="h-3 w-3" />
-                              댓글 {post.answers}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+              {posts.length > 0 ? (
+                posts.map((post) => <PostCard key={post.id} post={post} />)
+              ) : (
+                <div className="flex justify-center items-center h-full">
+                  <p className="text-muted-foreground">게시글이 없습니다.</p>
+                </div>
+              )}
             </div>
           </TabsContent>
 
