@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const dto: CreateQuestionDto = {
       title: body.title,
       content: body.content,
+      tags: body.tags,
       userId: body.userId,
     };
 

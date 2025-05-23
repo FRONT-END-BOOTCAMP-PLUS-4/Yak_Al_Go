@@ -2,6 +2,7 @@ export interface CreateQuestionDto {
   title: string;
   content: any;
   userId: string;
+  tags: string[];
 }
 
 export interface QuestionResponseDto {

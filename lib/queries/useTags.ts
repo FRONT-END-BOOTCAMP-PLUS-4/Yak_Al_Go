@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-
-interface Tag {
-  id: string;
-  name: string;
-}
+import { Tag } from '@/backend/domain/entities/tagEntity';
 
 async function fetchTags(): Promise<Tag[]> {
   const response = await fetch('/api/tags');

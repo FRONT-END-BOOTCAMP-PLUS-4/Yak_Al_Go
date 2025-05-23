@@ -1,5 +1,5 @@
-import { Question } from '../../../domain/entities/questionEntity';
-import { QuestionRepository } from '../../../domain/repositories/questionRepository';
+import { Question } from '@/backend/domain/entities/questionEntity';
+import { QuestionRepository } from '@/backend/domain/repositories/questionRepository';
 import { CreateQuestionDto, QuestionResponseDto } from '@/backend/dto/questionDto';
 
 export class CreateQuestionUseCase {
@@ -13,7 +13,9 @@ export class CreateQuestionUseCase {
     });
 
     const created = await this.questionRepository.create(question);
-
+    if (created.id) {
+      await this.questionRepository.addTags(created.id, dto.tags);
+    }
     return {
       id: created.id,
       title: created.title,

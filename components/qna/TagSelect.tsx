@@ -9,10 +9,11 @@ import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTags } from '@/lib/queries/useTags';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tag } from '@/backend/domain/entities/tagEntity';
 
 interface TagSelectProps {
-  selectedTags: string[];
-  onTagsChange: (tags: string[]) => void;
+  selectedTags: Tag[];
+  onTagsChange: (tags: Tag[]) => void;
 }
 
 export function TagSelect({ selectedTags, onTagsChange }: TagSelectProps) {
@@ -22,15 +23,15 @@ export function TagSelect({ selectedTags, onTagsChange }: TagSelectProps) {
   const { data: tags = [], isLoading } = useTags();
 
   const filteredTags = tags.filter(
-    (tag) => tag.name.toLowerCase().includes(search.toLowerCase()) && !selectedTags.includes(tag.name)
+    (tag) => tag.name.toLowerCase().includes(search.toLowerCase()) && !selectedTags.includes(tag)
   );
 
-  const handleSelect = (tagName: string) => {
-    onTagsChange([...selectedTags, tagName]);
+  const handleSelect = (tag: Tag) => {
+    onTagsChange([...selectedTags, tag]);
     setSearch('');
   };
 
-  const handleRemove = (tagToRemove: string) => {
+  const handleRemove = (tagToRemove: Tag) => {
     onTagsChange(selectedTags.filter((tag) => tag !== tagToRemove));
   };
 
@@ -54,8 +55,8 @@ export function TagSelect({ selectedTags, onTagsChange }: TagSelectProps) {
         <PopoverTrigger asChild>
           <div className="flex flex-wrap items-center gap-2 w-full border rounded-md p-2 min-h-[40px]">
             {selectedTags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => handleRemove(tag)}>
-                {tag} <X className="ml-1 h-3 w-3" />
+              <Badge key={tag.id} variant="secondary" className="cursor-pointer" onClick={() => handleRemove(tag)}>
+                {tag.name} <X className="ml-1 h-3 w-3" />
               </Badge>
             ))}
             <div className="flex-1 outline-none bg-transparent text-gray-500">
@@ -74,7 +75,7 @@ export function TagSelect({ selectedTags, onTagsChange }: TagSelectProps) {
               value={search} // controlled component으로 관리하기 위해서 세팅
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && filteredTags.length > 0 && !isComposing) {
-                  handleSelect(filteredTags[0].name);
+                  handleSelect(filteredTags[0]);
                 }
               }}
               onCompositionStart={() => setIsComposing(true)}
@@ -83,10 +84,8 @@ export function TagSelect({ selectedTags, onTagsChange }: TagSelectProps) {
             <CommandEmpty>태그를 찾을 수 없습니다.</CommandEmpty>
             <CommandGroup>
               {filteredTags.map((tag) => (
-                <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelect(tag.name)}>
-                  <Check
-                    className={cn('mr-2 h-4 w-4', selectedTags.includes(tag.name) ? 'opacity-100' : 'opacity-0')}
-                  />
+                <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelect(tag)}>
+                  <Check className={cn('mr-2 h-4 w-4', selectedTags.includes(tag) ? 'opacity-100' : 'opacity-0')} />
                   {tag.name}
                 </CommandItem>
               ))}

@@ -1,9 +1,9 @@
-import { Tag, CreateTagDTO, UpdateTagDTO } from '@/backend/domain/entities/tagEntity';
+import { Tag } from '@/backend/domain/entities/tagEntity';
+import { CreateTagDto } from '@/backend/dto/createTagDto';
 
 export interface TagRepository {
   findAll(): Promise<Tag[]>;
   findById(id: string): Promise<Tag | null>;
-  create(data: CreateTagDTO): Promise<Tag>;
-  update(id: string, data: UpdateTagDTO): Promise<Tag>;
+  create(data: CreateTagDto): Promise<Tag>;
   delete(id: string): Promise<void>;
 }
