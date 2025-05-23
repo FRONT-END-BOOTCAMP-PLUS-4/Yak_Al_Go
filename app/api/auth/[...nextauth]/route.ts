@@ -41,6 +41,7 @@ const handler = NextAuth({
           token.member_type = dbUser.member_type;
           // created_at추가 보류 => 타입 오류 발생 가능
           token.hpid = dbUser.hpid;
+          token.needsSignup = false;
         } else {
           // 회원가입이 되어있지 않은 사용자 => 보류
           // 사용자 별 토큰에 정보 입력 : 일반 step1 | 약사 step2
