@@ -57,35 +57,36 @@ model medi_times {
 }
 
 model medicines {
-  item_seq         String        @id
-  item_name        String        @db.VarChar(255)
-  entp_name        String?       @db.VarChar(255)
+  item_seq         String             @id
+  item_name        String             @db.VarChar(255)
+  entp_name        String?            @db.VarChar(255)
   item_permit_date DateTime?
-  etc_otc_code     String?       @db.VarChar(50)
-  class_no         String?       @db.VarChar(100)
+  etc_otc_code     String?            @db.VarChar(50)
+  class_no         String?            @db.VarChar(100)
   chart            String?
-  bar_code         String?       @db.VarChar(50)
+  bar_code         String?            @db.VarChar(50)
   material_name    String?
-  ee_doc_id        String?       @db.VarChar(255)
-  bizrno           String?       @db.VarChar(20)
+  ee_doc_id        String?            @db.VarChar(255)
+  bizrno           String?            @db.VarChar(20)
   cancel_date      DateTime?
-  cancel_name      String?       @db.VarChar(100)
+  cancel_name      String?            @db.VarChar(100)
   change_date      DateTime?
-  created_at       DateTime      @default(now())
-  edi_code         String?       @db.VarChar(50)
-  insert_file      String?       @db.VarChar(255)
-  nb_doc_id        String?       @db.VarChar(255)
-  pack_unit        String?       @db.VarChar(255)
+  created_at       DateTime           @default(now())
+  edi_code         String?            @db.VarChar(50)
+  insert_file      String?            @db.VarChar(255)
+  nb_doc_id        String?            @db.VarChar(255)
+  pack_unit        String?            @db.VarChar(255)
   reexam_date      DateTime?
-  reexam_target    String?       @db.VarChar(255)
-  storage_method   String?       @db.VarChar(255)
-  type_code        String?       @db.VarChar(10)
-  type_name        String?       @db.VarChar(100)
-  ud_doc_id        String?       @db.VarChar(255)
-  updated_at       DateTime      @updatedAt
-  valid_term       String?       @db.VarChar(100)
+  reexam_target    String?            @db.VarChar(255)
+  storage_method   String?            @db.VarChar(255)
+  type_code        String?            @db.VarChar(10)
+  type_name        String?            @db.VarChar(100)
+  ud_doc_id        String?            @db.VarChar(255)
+  updated_at       DateTime           @updatedAt
+  valid_term       String?            @db.VarChar(100)
   inventories      inventories[]
   user_medis       user_medis[]
+  medicine_reviews medicine_reviews[]
 
   @@index([item_name])
   @@index([entp_name])
@@ -189,22 +190,53 @@ model user_medis {
   users      users        @relation(fields: [userId], references: [id])
 }
 
+model review_types {
+  id               Int                @id @default(autoincrement())
+  review_text      String?            @db.VarChar(100)
+  emoji            String?            @db.VarChar(10)
+  category         String?            @db.VarChar(50)
+  is_active        Boolean?
+  created_at       DateTime?
+  
+  medicine_reviews medicine_reviews[]
+  
+  @@map("review_types")
+}
+
+model medicine_reviews {
+  id               Int          @id @default(autoincrement())
+  medi_id          String       @map("medi_id")
+  review_type_id   Int          @map("review_type_id")
+  user_id          String       @map("user_id") @db.Uuid
+  
+  medicines        medicines    @relation(fields: [medi_id], references: [item_seq])
+  review_types     review_types @relation(fields: [review_type_id], references: [id])
+  users            users        @relation(fields: [user_id], references: [id])
+  
+  @@unique([medi_id, review_type_id, user_id])
+  @@index([medi_id])
+  @@index([user_id])
+  @@index([review_type_id])
+  @@map("medi_reviews")
+}
+
 model users {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String?        @unique @db.VarChar(255)
-  photo        String?        @db.VarChar(255)
-  name         String?        @db.VarChar(100)
-  birthyear    Int?
-  gender       String?        @db.VarChar(10)
-  member_type  Int            @default(0)
-  created_at   DateTime       @default(now())
-  deleted_at   DateTime?
-  hpid         String?
-  answers      answers[]
-  comments     comments[]
-  posts        posts[]
-  qnas         qnas[]
-  user_healths user_healths[]
-  user_medis   user_medis[]
-  pharmacies   pharmacies?    @relation(fields: [hpid], references: [hpid])
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String?            @unique @db.VarChar(255)
+  photo            String?            @db.VarChar(255)
+  name             String?            @db.VarChar(100)
+  birthyear        Int?
+  gender           String?            @db.VarChar(10)
+  member_type      Int                @default(0)
+  created_at       DateTime           @default(now())
+  deleted_at       DateTime?
+  hpid             String?
+  answers          answers[]
+  comments         comments[]
+  posts            posts[]
+  qnas             qnas[]
+  user_healths     user_healths[]
+  user_medis       user_medis[]
+  medicine_reviews medicine_reviews[]
+  pharmacies       pharmacies?        @relation(fields: [hpid], references: [hpid])
 }
