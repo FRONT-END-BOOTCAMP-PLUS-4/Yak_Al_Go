@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import { PrismaUserRepository } from "../../../../backend/infra/repositories/PrismaUserRepository";
-import { DetailUserUseCase } from "../../../../backend/usecase/DetailUserUseCase";
-import { HealthConditionSignupUseCase } from "../../../../backend/usecase/HealthConditionSignupUseCase";
-
-const userRepository = new PrismaUserRepository();
-const detailUserUseCase = new DetailUserUseCase(userRepository);
-const healthConditionUseCase = new HealthConditionSignupUseCase(userRepository);
+import { SignupUseCase } from '@/backend/application/usecases/signup/SignupUsecase';
+import { UserRepository } from '@/backend/domain/repositories/UsersRepository';
 
 export async function POST(req: Request) {
-  try {
+
+try {
     const formData = await req.json();
+    
+    const detailUserUseCase = new SignupUseCase(
+      new UserRepository(),
+      new UserHealthRepository()
+    );
     
     const savedUser = await detailUserUseCase.execute({
       email: formData.email,
@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       kidneyDisease: formData.kidneyDisease,
     };
 
+    const healthConditionUseCase = new HealthConditionSignupUseCase(new UserRepository());
     await healthConditionUseCase.execute(savedUser.id!, healthConditions);
 
     return NextResponse.json({ 
@@ -44,4 +45,6 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+
 }
+
