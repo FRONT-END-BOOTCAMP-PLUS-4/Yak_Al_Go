@@ -17,5 +17,7 @@ export interface PostRepository {
   findById(id: number): Promise<Post | null>;
   findAll(params: PaginationParams): Promise<PaginatedPosts>;
   addTags(postId: number, tags: Tag[]): Promise<void>;
+  updateTags(postId: number, tags: Tag[]): Promise<void>;
+  update(id: number, post: Post): Promise<Post>;
   delete(id: number): Promise<void>;
 }

@@ -65,7 +65,7 @@ export function QuestionOptionDropdown({ questionId, answerCount = 0 }: Question
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/member/qnas/${questionId}/edit`)}>
           <Edit className="h-4 w-4 mr-2" />
           수정
         </DropdownMenuItem>

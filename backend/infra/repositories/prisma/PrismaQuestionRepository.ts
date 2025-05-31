@@ -219,6 +219,7 @@ export class PrismaQuestionRepository implements QuestionRepository {
         title: question.title,
         content: question.content,
         contentHTML: question.contentHTML,
+        updatedAt: new Date(),
       },
     });
 
@@ -231,5 +232,22 @@ export class PrismaQuestionRepository implements QuestionRepository {
       updatedAt: updated.updatedAt,
       userId: updated.userId,
     });
+  }
+
+  async updateTags(questionId: number, tags: Tag[]): Promise<void> {
+    // 기존 태그 연결 삭제
+    await this.prisma.qna_tags.deleteMany({
+      where: { qnaId: questionId },
+    });
+
+    // 새 태그 연결 추가
+    if (tags.length > 0) {
+      await this.prisma.qna_tags.createMany({
+        data: tags.map((t) => ({
+          qnaId: questionId,
+          tagId: t.id,
+        })),
+      });
+    }
   }
 }

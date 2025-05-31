@@ -176,6 +176,45 @@ export class PrismaPostRepository implements PostRepository {
     };
   }
 
+  async updateTags(postId: number, tags: Tag[]): Promise<void> {
+    // 기존 태그 연결 삭제
+    await this.prisma.posts_tags.deleteMany({
+      where: { postId: postId },
+    });
+
+    // 새 태그 연결 추가
+    if (tags.length > 0) {
+      await this.prisma.posts_tags.createMany({
+        data: tags.map((t) => ({
+          postId: postId,
+          tagId: t.id,
+        })),
+      });
+    }
+  }
+
+  async update(id: number, post: Post): Promise<Post> {
+    const updated = await this.prisma.posts.update({
+      where: { id },
+      data: {
+        title: post.title,
+        content: post.content,
+        contentHTML: post.contentHTML,
+        updatedAt: new Date(),
+      },
+    });
+
+    return new Post({
+      id: updated.id,
+      title: updated.title,
+      content: updated.content,
+      contentHTML: updated.contentHTML,
+      createdAt: updated.createdAt,
+      updatedAt: updated.updatedAt,
+      userId: updated.userId,
+    });
+  }
+
   async delete(id: number): Promise<void> {
     // 소프트 삭제로 구현 (deletedAt 필드 설정)
     await this.prisma.posts.update({

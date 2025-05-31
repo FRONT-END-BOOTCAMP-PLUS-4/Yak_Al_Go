@@ -17,6 +17,7 @@ export interface QuestionRepository {
   findById(id: number): Promise<Question | null>;
   findAll(params: PaginationParams): Promise<PaginatedQuestions>;
   addTags(questionId: number, tags: Tag[]): Promise<void>;
+  updateTags(questionId: number, tags: Tag[]): Promise<void>;
   delete(id: number, userId: string): Promise<void>;
   update(id: number, question: Question): Promise<Question>;
   hasAnswers(id: number): Promise<boolean>;

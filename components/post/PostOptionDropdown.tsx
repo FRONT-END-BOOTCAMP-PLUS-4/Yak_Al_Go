@@ -58,7 +58,7 @@ export function PostOptionDropdown({ postId }: PostOptionDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/member/posts/${postId}/edit`)}>
           <Edit className="h-3 w-3 mr-2" />
           수정
         </DropdownMenuItem>
