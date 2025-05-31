@@ -1,14 +1,47 @@
-import prisma from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { PrismaUserRepository } from "../../../../backend/infra/repositories/PrismaUserRepository";
+import { DetailUserUseCase } from "../../../../backend/usecase/DetailUserUseCase";
+import { HealthConditionSignupUseCase } from "../../../../backend/usecase/HealthConditionSignupUseCase";
+
+const userRepository = new PrismaUserRepository();
+const detailUserUseCase = new DetailUserUseCase(userRepository);
+const healthConditionUseCase = new HealthConditionSignupUseCase(userRepository);
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  // usecase 
+  try {
+    const formData = await req.json();
+    
+    const savedUser = await detailUserUseCase.execute({
+      email: formData.email,
+      photo: formData.photo,
+      name: formData.name,
+      birthyear: formData.birthyear ? parseInt(formData.birthyear) : undefined,
+      member_type: formData.member_type,
+      hpid: formData.hpid,
+    });
 
-  // usecase 상태정보 필터링
+    const healthConditions = {
+      pregnent: formData.pregnent,
+      allergy: formData.allergy,
+      hypertension: formData.hypertension,
+      diabetes: formData.diabetes,
+      heartDisease: formData.heartDisease,
+      liverDisease: formData.liverDisease,
+      kidneyDisease: formData.kidneyDisease,
+    };
 
-    return NextResponse.json({ success: true });
+    await healthConditionUseCase.execute(savedUser.id!, healthConditions);
+
+    return NextResponse.json({ 
+      success: true, 
+      data: savedUser 
+    });
+
   } catch (error) {
-    return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
+    console.error("회원가입 오류:", error);
+    return NextResponse.json(
+      { error: "Database update failed" }, 
+      { status: 500 }
+    );
   }
 }
