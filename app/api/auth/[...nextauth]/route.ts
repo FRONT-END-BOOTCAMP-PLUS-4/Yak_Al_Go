@@ -28,6 +28,7 @@ export const authOptions: NextAuthOptions = {
 
         if (dbUser) {
           // 회원가입이 되어있는 사용자
+          token.id = dbUser.id;
           token.birthyear = dbUser.birthyear;
           token.member_type = dbUser.member_type;
           // created_at추가 보류 => 타입 오류 발생 가능
